@@ -18,6 +18,12 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Eye, EyeOff, ChevronLeft, ChevronRight, Settings } from "lucide-react";
 
 const SECRET = import.meta.env.VITE_ENCRYPT_SECRET;
+console.log(
+  "Encryption Secret Loaded in Sidebar:",
+  Boolean(SECRET),
+  SECRET,
+  SECRET ? "****" : "Not Set"
+);
 
 interface SidebarProps {
   isCollapsed: boolean;
