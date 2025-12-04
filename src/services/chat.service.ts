@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const backendUrl = import.meta.env.VITE_API_BACKEND_URL || "http://localhost:4001/api";
+const backendUrl = import.meta.env.VITE_APP_API_URL;
 
 const API_URL = `${backendUrl}/ai/generate`;
 
