@@ -28,6 +28,9 @@ jobs:
           VITE_ENCRYPT_SECRET=${{ secrets.VITE_ENCRYPT_SECRET }}
           EOF
 
+      - name: Debug print env file
+        run: cat .env.production
+
       # Step 4: Install dependencies
       - name: Install dependencies
         run: npm install
