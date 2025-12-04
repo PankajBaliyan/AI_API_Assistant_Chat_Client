@@ -23,8 +23,10 @@ jobs:
       # Step 3: Create .env.production file with GitHub Secrets
       - name: Create .env.production file
         run: |
-          echo "VITE_APP_API_URL=${{ secrets.VITE_APP_API_URL }}" >> .env.production
-          echo "VITE_ENCRYPT_SECRET=${{ secrets.VITE_ENCRYPT_SECRET }}" >> .env.production
+          cat << 'EOF' > .env.production
+          VITE_APP_API_URL=${{ secrets.VITE_APP_API_URL }}
+          VITE_ENCRYPT_SECRET=${{ secrets.VITE_ENCRYPT_SECRET }}
+          EOF
 
       # Step 4: Install dependencies
       - name: Install dependencies
