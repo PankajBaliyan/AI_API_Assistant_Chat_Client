@@ -245,8 +245,16 @@ export function ChatMode({
           setIsGenerating(false);
         })
         .catch((error) => {
-          console.error(error);
-          toast.error("Failed to send message");
+          console.error("Error sending message:", error);
+
+          const backendError =
+            error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            error?.message ||
+            "Unknown error occurred";
+
+          toast.error(backendError);
+
           setIsGenerating(false);
         });
     } catch (error) {
