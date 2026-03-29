@@ -13,6 +13,7 @@ import CryptoJS from "crypto-js";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { ChatService } from "@/services/chat.service";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Eye, EyeOff, ChevronLeft, ChevronRight, Settings } from "lucide-react";
@@ -52,6 +53,7 @@ export function Sidebar({
   const [showApiKey, setShowApiKey] = useState(false);
   const [loadingModels, setLoadingModels] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleListModels = async () => {
     try {
@@ -81,7 +83,7 @@ export function Sidebar({
       setAvailableModels([]);
       console.error(error);
       setErrorMessage(
-        error?.response?.data?.details || error?.response?.data?.error || "Failed to list models."
+        error?.response?.data?.details || error?.response?.data?.error || "Failed to list models.",
       );
     } finally {
       setLoadingModels(false);
@@ -98,7 +100,7 @@ export function Sidebar({
   const handleEnableApiKeyView = () => {
     toast.info(
       "For your security, the API key field is disabled by default. Click the eye icon to enable editing.",
-      { duration: 10000 }
+      { duration: 10000 },
     );
   };
 
@@ -106,7 +108,7 @@ export function Sidebar({
     <div
       className={cn(
         "relative h-full bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out flex",
-        isCollapsed ? "w-16" : "w-80"
+        isCollapsed ? "w-16" : "w-80",
       )}
     >
       {/* Collapsed */}
@@ -221,12 +223,42 @@ export function Sidebar({
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
 
-                    <SelectContent className="max-h-60 overflow-auto bg-popover">
-                      {availableModels.map((model) => (
-                        <SelectItem key={model} value={model} className={getBestModelClass(model)}>
-                          {model}
-                        </SelectItem>
-                      ))}
+                    <SelectContent className="max-h-60 overflow-hidden bg-popover p-0">
+                      <div className="sticky top-0 p-2 bg-popover border-b">
+                        <Input
+                          type="text"
+                          placeholder="Search models..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => e.stopPropagation()}
+                          className="bg-secondary h-8"
+                          autoFocus
+                        />
+                      </div>
+                      <div className="overflow-auto max-h-52">
+                        {availableModels.filter((model) =>
+                          model.toLowerCase().includes(searchQuery.toLowerCase()),
+                        ).length === 0 ? (
+                          <div className="p-4 text-center text-sm text-muted-foreground">
+                            No models found
+                          </div>
+                        ) : (
+                          availableModels
+                            .filter((model) =>
+                              model.toLowerCase().includes(searchQuery.toLowerCase()),
+                            )
+                            .map((model) => (
+                              <SelectItem
+                                key={model}
+                                value={model}
+                                className={getBestModelClass(model)}
+                              >
+                                {model}
+                              </SelectItem>
+                            ))
+                        )}
+                      </div>
                     </SelectContent>
                   </Select>
                 </div>
