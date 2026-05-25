@@ -114,24 +114,24 @@ const Index = () => {
           <div className="flex gap-2 ml-auto">
             {/* New Chat */}
             <Button
-              variant="ghost"
-              size="icon"
+              variant="outline"
               onClick={handleNewChat}
               title="Start New Chat"
-              className="rounded-full hover:bg-accent"
+              className="gap-2 rounded-full hover:bg-accent"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4" />
+              <span>New chat</span>
             </Button>
 
             {/* Download Chat */}
             <Button
-              variant="ghost"
-              size="icon"
+              variant="outline"
               onClick={handleDownloadChat}
               title="Download Chat"
-              className="rounded-full hover:bg-accent"
+              className="gap-2 rounded-full hover:bg-accent"
             >
-              <Download className="h-5 w-5" />
+              <Download className="h-4 w-4" />
+              <span>Download chat</span>
             </Button>
           </div>
         </div>
