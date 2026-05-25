@@ -95,6 +95,20 @@ export function ChatMode({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Keep track of previous isGenerating state to detect completion and refocus
+  const prevIsGenerating = useRef(isGenerating);
+
+  useEffect(() => {
+    if (prevIsGenerating.current && !isGenerating) {
+      // Focus after rendering to ensure the disabled state is removed from textarea
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    }
+    prevIsGenerating.current = isGenerating;
+  }, [isGenerating]);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -167,6 +181,9 @@ export function ChatMode({
   const handleEditMessage = (msg: Message) => {
     setInput(msg.content);
     toast.success("Message loaded for editing.");
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   // ----- TOGGLE SELECTION -----
@@ -628,6 +645,7 @@ export function ChatMode({
             <div className="absolute inset-0 z-10 cursor-not-allowed" />
           )}
           <Textarea
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
