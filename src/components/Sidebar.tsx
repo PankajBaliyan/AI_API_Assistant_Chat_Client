@@ -135,10 +135,7 @@ export function Sidebar({
   };
 
   const handleEnableApiKeyView = () => {
-    toast.info(
-      "For your security, the API key field is disabled by default. Click the eye icon to enable editing.",
-      { duration: 10000 },
-    );
+    toast.error("API key is required");
   };
 
   return (

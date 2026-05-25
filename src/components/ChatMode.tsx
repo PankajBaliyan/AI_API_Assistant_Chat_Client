@@ -403,10 +403,7 @@ export function ChatMode({
     selectedAIProvider: string
   ) => {
     if (!apiKey) {
-      toast.info(
-        "For your security, the API key field is disabled by default. Click the eye icon to enable editing.",
-        { duration: 10000 }
-      );
+      toast.error("API key is required");
     } else if (!selectedModel) {
       toast.info("Please select a model first.", { duration: 10000 });
     } else if (!selectedAIProvider) {
