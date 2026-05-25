@@ -9,6 +9,10 @@ import {
   Trash2,
   Square,
   SquareCheck,
+  Sparkles,
+  Terminal,
+  PenTool,
+  HelpCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import CryptoJS from "crypto-js";
@@ -40,6 +44,33 @@ function detectLanguage(code: string) {
   const result = hljs.highlightAuto(code);
   return result.language || "plaintext";
 }
+
+const SUGGESTED_PROMPTS = [
+  {
+    title: "Explain a concept",
+    description: "Break down quantum computing in simple terms for a beginner.",
+    prompt: "Explain the concept of quantum computing in simple terms for a beginner.",
+    icon: <HelpCircle className="w-5 h-5" />,
+  },
+  {
+    title: "Write & debug code",
+    description: "Generate a custom React hook to sync localStorage across tabs.",
+    prompt: "Write a robust React custom hook to handle localStorage with sync across tabs.",
+    icon: <Terminal className="w-5 h-5" />,
+  },
+  {
+    title: "Draft professional content",
+    description: "Write an engaging email requesting feedback on a new project.",
+    prompt: "Draft an engaging, friendly email requesting project feedback from my team.",
+    icon: <PenTool className="w-5 h-5" />,
+  },
+  {
+    title: "Brainstorm creative ideas",
+    description: "Suggest 5 unique ideas for AI-powered web applications.",
+    prompt: "Brainstorm 5 unique web application ideas combining AI API integrations.",
+    icon: <Sparkles className="w-5 h-5" />,
+  },
+];
 
 // ----- COPY BUTTON COMPONENT -----
 function CopyButton({ code }: { code: string }) {
@@ -162,6 +193,9 @@ export function ChatMode({
       setMessages([]);
       setSelectedMessages([]);
       setContextMenu({ visible: false, x: 0, y: 0, messageId: null });
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
     };
 
     const downloadHandler = () => {
@@ -204,6 +238,14 @@ export function ChatMode({
   const deleteMessage = (id: string) => {
     setMessages((prev) => prev.filter((m) => m.id !== id));
     setSelectedMessages((prev) => prev.filter((mid) => mid !== id));
+  };
+
+  // ----- PROMPT CLICK HANDLER -----
+  const handlePromptClick = (text: string) => {
+    setInput(text);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   // ----- SEND MESSAGE -----
@@ -508,13 +550,46 @@ export function ChatMode({
           onScroll={handleScroll}
         >
           {messages.length === 0 ? (
-            <div className="flex h-full items-center justify-center">
-              <div className="text-center space-y-3">
-                <div className="text-6xl mb-4">💬</div>
-                <h3 className="text-xl font-semibold">Start a conversation</h3>
-                <p className="text-muted-foreground">
-                  Ask anything and your AI assistant will respond.
-                </p>
+            <div className="flex h-full items-center justify-center p-4 md:p-8 overflow-y-auto">
+              <div className="max-w-3xl w-full text-center space-y-8 py-6 animate-fade-in">
+                {/* Glowing Core Visual */}
+                <div className="relative mx-auto w-20 h-20 flex items-center justify-center rounded-3xl bg-gradient-to-br from-primary/30 to-cyan-500/10 border border-primary/20 shadow-glow animate-bounce [animation-duration:4s]">
+                  <div className="absolute inset-0 rounded-3xl bg-primary/20 blur-xl animate-pulse" />
+                  <Sparkles className="w-10 h-10 text-primary animate-glow" />
+                </div>
+
+                {/* Modern Premium Heading */}
+                <div className="space-y-3">
+                  <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary via-cyan-400 to-indigo-500 bg-clip-text text-transparent">
+                    AI Conversation Partner
+                  </h1>
+                  <p className="text-muted-foreground text-sm md:text-base max-w-lg mx-auto leading-relaxed">
+                    Ask questions, write code, draft creative content, or brainstorm ideas. Select a prompt below or start typing.
+                  </p>
+                </div>
+
+                {/* Beautiful Prompt Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto pt-6 text-left">
+                  {SUGGESTED_PROMPTS.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handlePromptClick(item.prompt)}
+                      className="group relative flex flex-col p-5 rounded-2xl bg-card/30 border border-border/50 backdrop-blur-md transition-all duration-300 hover:bg-card/70 hover:border-primary/40 hover:shadow-glow text-left cursor-pointer hover:-translate-y-0.5"
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-xl bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
+                          {item.icon}
+                        </div>
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-sm">
+                          {item.title}
+                        </h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {item.description}
+                      </p>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
